@@ -1,0 +1,11 @@
+{
+	"extends": "./tsconfig.json",
+	"compilerOptions": {
+		"module": "ESNext",
+		"outDir": "../dist/esm"
+	},
+	"include": [
+		"../src/tm-template-mailer-client.ts"
+	],
+}
+
