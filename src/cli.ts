@@ -80,7 +80,7 @@ program
 				domain: program.opts().domain,
 				part: !!program.opts().part,
 			};
-			const result = await client.postTemplate(templateData);
+			const result = await client.storeTemplate(templateData);
 			console.log('Template updated');
 		} catch (error) {
 			if (error instanceof Error) {
@@ -106,7 +106,7 @@ program.command('send')
 				locale: program.opts().locale,
 				vars,
 			};
-			const result = await client.postSend(templateData);
+			const result = await client.sendTemplate(templateData);
 			console.log('Template sent');
 		} catch (error) {
 			if (error instanceof Error) {

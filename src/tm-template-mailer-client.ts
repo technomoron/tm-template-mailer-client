@@ -1,7 +1,7 @@
 import emailAddresses, { ParsedMailbox } from 'email-addresses';
 import nunjucks from 'nunjucks';
 
-interface TemplateData {
+interface templateData {
 	template: string;
 	domain: string;
 	sender?: string;
@@ -11,7 +11,7 @@ interface TemplateData {
 	part?: boolean;
 }
 
-interface SendTemplateData {
+interface sendTemplateData {
 	name: string;
 	rcpt: string;
 	domain: string;
@@ -19,9 +19,9 @@ interface SendTemplateData {
 	vars?: object;
 }
 
-type FetchResult = { result: any; error: string | null };
+type fetchResult = { result: any; error: string | null };
 
-class TemplateClient {
+class templateClient {
 	private baseURL: string;
 	private apiKey: string;
 
@@ -108,74 +108,50 @@ class TemplateClient {
 	}
 
 	private validateSender(sender: string): void {
-		const senderPattern = /^[^<>]+<[^<>]+@[^<>]+\.[^<>]+>$/;
-		if (!senderPattern.test(sender)) {
+		const exp = /^[^<>]+<[^<>]+@[^<>]+\.[^<>]+>$/;
+		if (!exp.test(sender)) {
 			throw new Error(
 				'Invalid sender format. Expected "Name <email@example.com>"',
 			);
 		}
 	}
 
-	async postTemplate(templateData: TemplateData): Promise<any> {
-		console.log('TEMPLATE');
-		const {
-			template,
-			sender = '',
-			domain,
-			name,
-			subject,
-			locale,
-			part
-		} = templateData;
-		if (!template) {
+	async storeTemplate(td: templateData): Promise<any> {
+		if (!td.template) {
 			throw new Error('No template data provided');
 		}
-
-		this.validateTemplate(template);
-		if (sender) {
-			this.validateSender(sender);
+		this.validateTemplate(td.template);
+		if (td.sender) {
+			this.validateSender(td.sender);
 		}
-
-		const result = await this.post('/api/v1/template', templateData);
-		// console.log(JSON.stringify(result, undefined, 2));
+		const result = await this.post('/api/v1/template', td);
 		return result;
 	}
 
-	async postSend(templateData: SendTemplateData): Promise<any> {
-		console.log('SENDING');
-		const {
-			name = '',
-			domain = '',
-			rcpt = '',
-			locale = '',
-			vars = {},
-		} = templateData;
-
-		if (!name || !rcpt) {
-			throw new Error('Invalid request body');
+	async sendTemplate(std: sendTemplateData): Promise<any> {
+		if (!std.name || !std.rcpt) {
+			throw new Error('Invalid request body; name/rcpt required');
 		}
 
-		const { valid, invalid } = this.validateEmails(rcpt);
+		const { valid, invalid } = this.validateEmails(std.rcpt);
 		if (invalid.length > 0) {
-			console.log('Invalid email address(es): ' + invalid.join(','));
-			process.exit(1);
+			throw new Error('Invalid email address(es): ' + invalid.join(','));
 		}
 
 		// this.validateTemplate(template);
 
 		const body = JSON.stringify({
-			name,
-			rcpt,
-			domain,
-			locale,
-			vars,
+			name: std.name,
+			rcpt: std.rcpt,
+			domain: std.domain || '',
+			locale: std.locale || '',
+			vars: std.vars || {},
 		});
 		// console.log(JSON.stringify(body, undefined, 2));
-		const result = await this.post('/api/v1/send', templateData);
+		const result = await this.post('/api/v1/send', body);
 		// console.log(JSON.stringify(result, undefined, 2));
-
 		return result;
 	}
 }
 
-export default TemplateClient;
+export default templateClient;
