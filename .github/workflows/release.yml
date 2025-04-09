@@ -39,6 +39,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            *.tgz # Upload the generated .tgz file
+            ./tm-template-mailer-client-*.tgz # Match the generated .tgz file
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
