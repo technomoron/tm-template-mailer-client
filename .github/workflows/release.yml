@@ -34,6 +34,13 @@ jobs:
         run: npm pack
         id: pack
 
+      - name: Debug File Locations
+        run: |
+          echo "Current directory:"
+          pwd
+          echo "Files in current directory:"
+          ls -al
+
       # Step 6: Create a GitHub Release and upload the `.tgz` file
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
