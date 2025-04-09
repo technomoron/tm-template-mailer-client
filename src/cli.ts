@@ -118,6 +118,12 @@ program.command('send')
 		}
 	});
 
+program.command('version')
+	.description("Show current client version")
+	.action(async (cmdOptions) => {
+		console.log("1.0.19");
+	});
+
 program.command('compile')
 	.description('Compile templates by resolving inheritance and processing with FFE')
 	.option('-i, --input <input>', 'Input directory', './templates')
