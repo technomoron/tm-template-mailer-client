@@ -140,13 +140,13 @@ class templateClient {
 
 		// this.validateTemplate(template);
 
-		const body = JSON.stringify({
+		const body = {
 			name: std.name,
 			rcpt: std.rcpt,
 			domain: std.domain || '',
 			locale: std.locale || '',
 			vars: std.vars || {},
-		});
+		};
 		// console.log(JSON.stringify(body, undefined, 2));
 		const result = await this.post('/api/v1/send', body);
 		// console.log(JSON.stringify(result, undefined, 2));
