@@ -1,6 +1,6 @@
 {
   "name": "tm-template-mailer-client",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Client library for tm-template-mailer-server",
   "main": "dist/cjs/tm-template-mailer-client.js",
   "types": "dist/cjs/tm-template-mailer-client.d.ts",
